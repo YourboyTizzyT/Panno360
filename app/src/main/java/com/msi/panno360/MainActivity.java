@@ -22,14 +22,17 @@ public class MainActivity extends AppCompatActivity {
     private GLSurfaceView glSurfaceView;
     private Context context;
     private int aPositionHandle;
-    private int programId;
     private FloatBuffer vertexBuffer;
+
+    private GLRenderer glRenderer;
 
     private final float[] vertexData = {
             0f,0f,0f,
             1f,-1f,0f,
             1f,1f,0f
     };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,16 +40,17 @@ public class MainActivity extends AppCompatActivity {
         glSurfaceView = (GLSurfaceView)findViewById(R.id.surface_view);
 
         glSurfaceView.setEGLContextClientVersion(2);
-        glSurfaceView.setRenderer((GLSurfaceView.Renderer) new GLRenderer(this));
+        glRenderer  = new GLRenderer(this);
+        glSurfaceView.setRenderer((GLSurfaceView.Renderer) glRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        aPositionHandle= GLES20.glGetAttribLocation(programId,"aPosition");
+        aPositionHandle= GLES20.glGetAttribLocation(glRenderer.getProgramId(),"aPosition");
 
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
                 .put(vertexData);
         vertexBuffer.position(0);
-
+        glRenderer.setVertexBuffer(vertexBuffer);
 
     }
 }
