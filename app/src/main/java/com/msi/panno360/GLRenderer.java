@@ -38,7 +38,9 @@ class GLRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
+        String vertexShader = ShaderUtils.readRawTextFile(context, R.raw.vertex_shader);
+        String fragmentShader= ShaderUtils.readRawTextFile(context, R.raw.fragment_shader);
+        programId=ShaderUtils.createProgram(vertexShader,fragmentShader);
     }
 
     @Override

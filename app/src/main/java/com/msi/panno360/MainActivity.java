@@ -30,10 +30,6 @@ public class MainActivity extends AppCompatActivity {
             1f,-1f,0f,
             1f,1f,0f
     };
-    public  void GLRenderer(Context context){
-        this.context = context;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         glSurfaceView.setRenderer((GLSurfaceView.Renderer) new GLRenderer(this));
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         aPositionHandle= GLES20.glGetAttribLocation(programId,"aPosition");
+
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
@@ -52,10 +49,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    /**
-     * 获取上下文
-     * @param context
-     */
-
 }
