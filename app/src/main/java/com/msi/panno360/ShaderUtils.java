@@ -1,8 +1,6 @@
 package com.msi.panno360;
-
 import android.content.Context;
 import android.opengl.GLES20;
-import android.os.Debug;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,33 +8,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Created by MSI on 18/11/09.
- */
 
 public class ShaderUtils {
-    private static final String TAG = "debug";
-    private static String label = "Error:";
 
-    /**
-     * 获取一个函数用来读取raw中的文本文件，并且以String的形式返回，这其实和OpenGL的关系并不大，代码如下:
-     */
-    public static String readRawTextFile(Context context, int resId){
-        InputStream inputStream = context.getResources().openRawResource(resId);
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while((line = reader.readLine())!= null){
-                sb.append(line).append("\n");
-            }
-            reader.close();
-            return sb.toString();
-        }catch (IOException e){
-            e.printStackTrace();
+    private static final String TAG = "ShaderUtils";
+
+    public static void checkGlError(String label) {
+        int error;
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            Log.e(TAG, label + ": glError " + error);
+            throw new RuntimeException(label + ": glError " + error);
         }
-        return null;
     }
+
     public static int createProgram(String vertexSource, String fragmentSource) {
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
         if (vertexShader == 0) {
@@ -66,14 +50,6 @@ public class ShaderUtils {
         return program;
     }
 
-    private static void checkGlError(String glAttachShader) {
-        int error;
-        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-            Log.e(TAG, label + ": glError " + error);
-            throw new RuntimeException(label + ": glError " + error);
-        }
-
-    }
 
     public static int loadShader(int shaderType, String source) {
         int shader = GLES20.glCreateShader(shaderType);
@@ -90,5 +66,22 @@ public class ShaderUtils {
             }
         }
         return shader;
+    }
+
+    public static String readRawTextFile(Context context, int resId) {
+        InputStream inputStream = context.getResources().openRawResource(resId);
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
